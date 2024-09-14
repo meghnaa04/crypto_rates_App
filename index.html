@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>Crypto Rate Finder App by Kamal Sir</title>
+    <style>
+        * { font-size: 50px; font-family: Cambria; }
+        body { background-color: azure; }
+        input[type=radio] { width: 2%; height: 0.5em; }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Crypto Rate Finder</h1>
+        <form id="crypto-form">
+            <input type="radio" name="c" id="btc" checked /> BTC
+            <input type="radio" name="c" id="doge" /> DOGE
+            <input type="radio" name="c" id="eth" /> ETH
+            <br /><br />
+            <input type="submit" value="Find Rates" />
+        </form>
+        <h2 id="msg"></h2>
+
+        <script>
+            document.getElementById("crypto-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+                const btc = document.getElementById("btc");
+                const doge = document.getElementById("doge");
+                const eth = document.getElementById("eth");
+                const msg = document.getElementById("msg");
+                let curr = "";
+
+                if (btc.checked) curr = "BTC";
+                else if (doge.checked) curr = "DOGE";
+                else if (eth.checked) curr = "ETH";
+
+                const apiKey = "e8c2f3eadd840eb25c09830f176a71e0";
+                const url = `https://api.coinlayer.com/live?access_key=${apiKey}`;
+
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.rates && data.rates[curr]) {
+                            const rate = data.rates[curr];
+                            msg.innerHTML = `$${rate}`;
+                        } else {
+                            msg.innerHTML = "Rate data not available.";
+                        }
+                    })
+                    .catch(err => msg.innerHTML = "Issue: " + err);
+            });
+        </script>
+    </center>
+</body>
+</html>
